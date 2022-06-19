@@ -22,7 +22,7 @@ const Home: NextPage = () => {
   return (
     <>
       Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <button className='text-red-400' onClick={() => signIn()}>Sign in</button>
     </>
   )
 }
