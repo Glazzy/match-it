@@ -4,7 +4,7 @@ import '../styles/globals.css'
 
 export default function App({ Component, pageProps: {session, ...pageProps} }: AppProps) {
   return (
-    <SessionProvider session={session} refetchInterval={0}>
+    <SessionProvider session={session}>
       <Component {...pageProps} />
     </SessionProvider>
   )
