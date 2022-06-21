@@ -4,26 +4,26 @@ import { useRouter } from "next/router"
 import { ReactNode } from "react"
 import '../styles/globals.css'
 
-export default function App({ Component, pageProps: {session, ...pageProps} }: AppProps) {
+export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
-      {Component.auth ? 
+      {Component.auth ?
         (
-        <Auth>
+          <Auth>
+            <Component {...pageProps} />
+          </Auth>
+        )
+        :
+        (
           <Component {...pageProps} />
-        </Auth>
-        ) 
-        : 
-        (
-        <Component {...pageProps} />
         )}
-     
-      
+
+
     </SessionProvider>
   )
 }
 
-function Auth ({ children }: {children: ReactNode}) {
+function Auth({ children }: { children: ReactNode }) {
   const router = useRouter()
   const { status } = useSession({
     required: true,
@@ -32,8 +32,7 @@ function Auth ({ children }: {children: ReactNode}) {
     },
   })
 
-  if ( status === "loading") return <span>Loading..</span>
-
+  if (status === "loading") return <span>Loading..</span>
 
   return children
 }
