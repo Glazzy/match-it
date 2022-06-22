@@ -3,17 +3,19 @@ import Friends from "../icons/Friends"
 import House from "../icons/House"
 import Menu from "../icons/Menu"
 import classNames from "classnames"
+import Link from "next/link"
+import { useRouter } from "next/router"
 
 export default function BottomMenu () {
     
     return (
-        <nav className="h-20 w-full flex justify-center bottom-0 left-0 fixed">
+        <nav className="h-16 w-full flex justify-center bottom-0 left-0 fixed">
 
             <div className="w-1/2 mr-[42px] z-[1] grid grid-cols-2">
-                <BottomMenuItem isActive icon={<House />}>
+                <BottomMenuItem href="/dashboard/main" icon={<House />}>
                     Home
                 </BottomMenuItem>
-                <BottomMenuItem icon={<Friends />}>
+                <BottomMenuItem href="/" icon={<Friends />}>
                     Friends
                 </BottomMenuItem>
             </div>
@@ -21,10 +23,10 @@ export default function BottomMenu () {
             <div className="flex items-center text-sm justify-center text-white tracking-widest w-[64px] h-[64px] shadow-2xl rounded-full bg-gradient-to-r from-[#7A60EF] via-[#3b82f6] to-[#2dd4bf]  -top-6 absolute">Play</div>
 
             <div className="w-1/2 ml-[42px] z-[1] grid grid-cols-2">
-                <BottomMenuItem icon={<BarChart />}>
+                <BottomMenuItem href="/" icon={<BarChart />}>
                     Stats
                 </BottomMenuItem>
-                <BottomMenuItem icon={<Menu />}>
+                <BottomMenuItem href="/" icon={<Menu />}>
                     Menu
                 </BottomMenuItem>
             </div>
@@ -42,17 +44,22 @@ export default function BottomMenu () {
 }
 
 
-function BottomMenuItem ({children, icon, isActive}) {
+function BottomMenuItem ({children, href, icon}) {
 
-    const _className = classNames('grid gap-1.5 p-4 content-center justify-items-center font-bold text-[10px] tracking-widest uppercase',
+    const router = useRouter()
+    const isActive = router.pathname === href
+
+    const _className = classNames('grid gap-1.5 p-2 content-center justify-items-center font-bold text-[10px] tracking-widest uppercase',
         {['text-white']: isActive},
         {['text-[#7C8596]']: !isActive}
     )
 
     return (
-        <span className={_className}>
+        <Link href={href} >
+            <button className={_className}>
             {icon}
             {children}
-        </span>
+            </button>
+        </Link>
     )
 }
