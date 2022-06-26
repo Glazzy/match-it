@@ -1,75 +1,92 @@
-import React from 'react'
-import { bottomNavigationTypes, navigationSettings, topNavigationTypes } from '../generics/layout/shared/types'
-import BottomMenu from '../generics/menus/BottomMenu'
-import { DefaultTopNavigation, SubpageTopNavigation } from '../generics/menus/TopMenu'
+import React from "react";
+import {
+  bottomNavigationTypes,
+  navigationSettings,
+  topNavigationTypes,
+} from "../generics/layout/shared/types";
+import BottomMenu from "../generics/menus/BottomMenu";
+import {
+  DefaultTopNavigation,
+  SubpageTopNavigation,
+} from "../generics/menus/TopMenu";
 
 interface defaultNavSettings extends navigationSettings {
-    topNavigationType: topNavigationTypes,
-    bottomNavigationType: bottomNavigationTypes  
- }
- 
-
- const defaultNavSettings: defaultNavSettings = {
-     topNavigationType: 'default',
-     bottomNavigationType: 'default'  
- }
- 
-
-export default function NavSettings({navSettings, children}: {navSettings?: navigationSettings, children?: JSX.Element}) {
-    const mergedNavSettings = {...defaultNavSettings, ...navSettings}
-    const {topNavigationType, bottomNavigationType, customTopNavigation, customBottomNavigation} = mergedNavSettings
-
-    return (
-        <>
-            {/* Top navigation renderer */}
-            {topNavigationType !== 'custom' ? (<TopNavigation type={topNavigationType} />) : (
-                    customTopNavigation
-                )}
-                
-                {/* Page content */}
-                {children}
-
-            {/* Bottom navigation renderer */}
-            {bottomNavigationType !== 'custom' ? (<BottomNavigation type={bottomNavigationType} />) : (
-                customBottomNavigation
-            )}
-        </>
-    )
+  topNavigationType: topNavigationTypes;
+  bottomNavigationType: bottomNavigationTypes;
 }
 
-function TopNavigation({type}: {type: topNavigationTypes}) {
+const defaultNavSettings: defaultNavSettings = {
+  topNavigationType: "default",
+  bottomNavigationType: "default",
+};
 
-    const getTopNavigation = (type: topNavigationTypes) => {
-      switch (type) {
-        case "default":
-            return <DefaultTopNavigation />
-        case "mainpage":
-            return <DefaultTopNavigation />
-        case "subpage":
-            return <SubpageTopNavigation />
-        case "none":
-            return null
-        default:
-            return <DefaultTopNavigation />;
-      }
-          
-    }
+export default function NavSettings({
+  navSettings,
+  children,
+}: {
+  navSettings?: navigationSettings;
+  children?: JSX.Element;
+}) {
+  const mergedNavSettings = { ...defaultNavSettings, ...navSettings };
+  const {
+    topNavigationType,
+    bottomNavigationType,
+    customTopNavigation,
+    customBottomNavigation,
+  } = mergedNavSettings;
 
-    return getTopNavigation(type)
+  return (
+    <>
+      {/* Top navigation renderer */}
+      {topNavigationType !== "custom" ? (
+        <TopNavigation type={topNavigationType} />
+      ) : (
+        customTopNavigation
+      )}
+
+      {/* Page content */}
+      {children}
+
+      {/* Bottom navigation renderer */}
+      {bottomNavigationType !== "custom" ? (
+        <BottomNavigation type={bottomNavigationType} />
+      ) : (
+        customBottomNavigation
+      )}
+    </>
+  );
 }
 
-function BottomNavigation({type}: {type: bottomNavigationTypes}) {
-
-    const getBottomNavigation = (type: topNavigationTypes) => {
-        switch (type) {
-          case "default":
-                return <BottomMenu />
-          case "none":
-                return null
-          default:
-                return <BottomMenu />;
-        }
+function TopNavigation({ type }: { type: topNavigationTypes }) {
+  const getTopNavigation = (type: topNavigationTypes) => {
+    switch (type) {
+      case "default":
+        return <DefaultTopNavigation />;
+      case "mainpage":
+        return <DefaultTopNavigation />;
+      case "subpage":
+        return <SubpageTopNavigation />;
+      case "none":
+        return null;
+      default:
+        return <DefaultTopNavigation />;
     }
+  };
 
-    return getBottomNavigation(type)
+  return getTopNavigation(type);
+}
+
+function BottomNavigation({ type }: { type: bottomNavigationTypes }) {
+  const getBottomNavigation = (type: topNavigationTypes) => {
+    switch (type) {
+      case "default":
+        return <BottomMenu />;
+      case "none":
+        return null;
+      default:
+        return <BottomMenu />;
+    }
+  };
+
+  return getBottomNavigation(type);
 }
