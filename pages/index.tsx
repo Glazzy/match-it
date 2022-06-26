@@ -3,12 +3,12 @@ import { useSession, signIn, signOut } from "next-auth/react"
 import Head from 'next/head'
 import Image from 'next/image'
 import Button from '../components/generics/buttons/Button'
-import Page from '../components/generics/layout/page'
+import Page from '../components/generics/layout/Page'
+import { NextPageWithPageSettings } from '../components/generics/layout/shared/types'
 import BottomMenu from '../components/generics/menus/BottomMenu'
-import TopMenu, { TopMenuWithBackButton } from '../components/generics/menus/TopMenu'
 import styles from '../styles/Home.module.css'
 
-const Home: NextPage = () => {
+const Home: NextPageWithPageSettings = () => {
   const { data: session, status } = useSession()
 
 
@@ -25,19 +25,18 @@ const Home: NextPage = () => {
 
   return (
     <Page>
-      <TopMenuWithBackButton>
-        <ul className='flex gap-2 items-center'>
-          <li>one</li>
-          <li>two</li>
-          <li>three</li>
-        </ul>
-      </TopMenuWithBackButton>
-      Not signed in <br />
-      <Button onClick={() => signIn()}>Sign in</Button>
      
-      <BottomMenu />
+        <Button onClick={() => signIn()}>Sign in</Button>
+        <button className='text-red-400' >Sign in</button>
+
     </Page>
   )
 }
 
+Home.pageSettings = {
+  pageName: 'Home'
+}
+
 export default Home
+
+

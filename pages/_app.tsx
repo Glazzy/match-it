@@ -1,38 +1,55 @@
+import { NextComponentType, NextPageContext } from "next"
 import { SessionProvider, useSession } from "next-auth/react"
 import type { AppProps } from 'next/app'
-import { useRouter } from "next/router"
-import { ReactNode } from "react"
+import PageSettings from "../components/settings/PageSettings"
+import AuthSettings from "../components/settings/AuthSettings"
+import { NextPageWithPageSettings } from "../components/generics/layout/shared/types"
 import '../styles/globals.css'
+import NavSettings from "../components/settings/NavSettings"
+import { RecoilRoot } from "recoil"
+import WhenAuthEnabled from "../components/settings/conditionals/WhenAuthEnabled"
+import { RecoilSync } from "recoil-sync"
+import RecoilPageNameSync from "../components/settings/RecoilPageNameSync"
 
-export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+
+type NextComponentWithPageSettings = NextComponentType<NextPageContext, any, {}> & Partial<NextPageWithPageSettings>
+
+type ExtendedAppProps<P = {}> = AppProps<P> & {
+  Component: NextComponentWithPageSettings
+};
+
+export default function App({ Component, pageProps: { session, ...pageProps } }: ExtendedAppProps) {
+  console.log(Component.pageSettings)
+
   return (
     <SessionProvider session={session}>
-      {Component.auth ?
-        (
-          <Auth>
-            <Component {...pageProps} />
-          </Auth>
-        )
-        :
-        (
-          <Component {...pageProps} />
-        )}
 
+      <RecoilRoot>
+        <RecoilPageNameSync pageName={Component.pageSettings?.pageName}>
+
+        <WhenAuthEnabled authSettings={Component.authSettings}>
+          <AuthSettings authSettings={Component.authSettings}>
+              <NavSettings navSettings={Component.navSettings}>
+                <PageSettings pageSettings={Component.pageSettings}>
+                  <Component {...pageProps} />
+                </PageSettings>
+              </NavSettings>
+            </AuthSettings>
+        </WhenAuthEnabled>
+      
+        <WhenAuthEnabled authSettings={Component.authSettings} negate>
+          <NavSettings navSettings={Component.navSettings}>
+            <PageSettings pageSettings={Component.pageSettings}>
+              <Component {...pageProps} />
+            </PageSettings>
+          </NavSettings>
+        </WhenAuthEnabled>
+
+        </RecoilPageNameSync>
+
+    </RecoilRoot>
 
     </SessionProvider>
   )
 }
 
-function Auth({ children }: { children: ReactNode }) {
-  const router = useRouter()
-  const { status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/")
-    },
-  })
-
-  if (status === "loading") return <span>Loading..</span>
-
-  return children
-}
